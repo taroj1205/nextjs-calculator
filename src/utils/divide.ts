@@ -1,6 +1,6 @@
-import { subtract } from "./subtract"
 import { formatNumber, toPositive } from "./format"
 import { multiply } from "./multiply"
+import { subtract } from "./subtract"
 
 export const divide = (num1: number, num2: number): number => {
   if (num1 === 0 || num2 === 0) {

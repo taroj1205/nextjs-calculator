@@ -1,16 +1,5 @@
-import { Calculator } from "components/calculator"
 import { Heading, VStack } from "@yamada-ui/react"
-import type { GetServerSidePropsContext } from "next"
-
-export const getServerSideCommonProps = ({
-  req,
-}: GetServerSidePropsContext) => {
-  return {
-    props: {
-      cookies: req.headers.cookie ?? "",
-    },
-  }
-}
+import { Calculator } from "components/calculator"
 
 export default function Home() {
   return (
