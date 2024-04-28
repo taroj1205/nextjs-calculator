@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { UIProvider, colorModeManager, extendConfig } from "@yamada-ui/react"
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
