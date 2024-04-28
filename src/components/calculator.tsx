@@ -11,39 +11,43 @@ import {
   VStack,
   useRadioGroup,
 } from "@yamada-ui/react"
-import { memo, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { add } from "utils/add"
 import { divide } from "utils/divide"
 import { multiply } from "utils/multiply"
 import { subtract } from "utils/subtract"
-import { CalcMode } from "./calc-mode"
+import { CalcModeSwitcher } from "./calc-mode-switcher"
 
 export const Calculator = memo(() => {
   const [result, setResult] = useState<number | string | null>(null)
   const mode = useRef<"+" | "/" | "-" | "*">("+")
-  const num1 = useRef<number>(0)
-  const num2 = useRef<number>(0)
+  const [num1, setNum1] = useState<number>(0)
+  const [num2, setNum2] = useState<number>(0)
   const handleNumberOneChange = (num: string) => {
-    num1.current = Number(num)
+    setNum1(Number(num))
   }
   const handleNumberTwoChange = (num: string) => {
-    num2.current = Number(num)
+    setNum2(Number(num))
   }
-  const calculate = (currentMode = mode.current) => {
+  const calculate = (
+    currentMode = mode.current,
+    firstNum = num1,
+    secondNum = num2,
+  ) => {
     try {
       let answer = jsCalc()
       switch (currentMode) {
         case "+":
-          answer = add(num1.current, num2.current)
+          answer = add(firstNum, secondNum)
           break
         case "-":
-          answer = subtract(num1.current, num2.current)
+          answer = subtract(firstNum, secondNum)
           break
         case "*":
-          answer = multiply(num1.current, num2.current)
+          answer = multiply(firstNum, secondNum)
           break
         case "/":
-          answer = divide(num1.current, num2.current)
+          answer = divide(firstNum, secondNum)
           break
       }
       setResult(answer)
@@ -53,45 +57,35 @@ export const Calculator = memo(() => {
       return (error as Error).message
     }
   }
-  const { getContainerProps, getRadioProps } = useRadioGroup<
-    "+" | "/" | "-" | "*"
-  >({
-    defaultValue: "+",
-    onChange: (value) => {
-      mode.current = value as "+" | "/" | "-" | "*"
-      calculate(value)
-    },
-  })
 
   const jsCalc = () => {
     switch (mode.current) {
       case "+":
-        return num1.current + num2.current
+        return num1 + num2
       case "-":
-        return num1.current - num2.current
+        return num1 - num2
       case "*":
-        return num1.current * num2.current
+        return num1 * num2
       case "/":
-        return num1.current / num2.current
+        return num1 / num2
     }
   }
 
+  useEffect(() => {
+    calculate(mode.current, num1, num2)
+  }, [calculate, num1, num2])
+
   return (
     <>
-      <HStack>
+      <HStack flexDir={{ base: "row", md: "column" }}>
         <NumberInput onChange={handleNumberOneChange} />
-        <VStack w="inherit" gap="sm" {...getContainerProps()}>
-          <CalcMode {...getRadioProps({ value: "+" })} />
-          <CalcMode {...getRadioProps({ value: "-" })} />
-          <CalcMode {...getRadioProps({ value: "*" })} />
-          <CalcMode {...getRadioProps({ value: "/" })} />
-        </VStack>
+        <CalcModeSwitcher mode={mode} calculate={calculate} />
         <NumberInput onChange={handleNumberTwoChange} />
-        <Button onClick={() => calculate()}>Calculate</Button>
+        <Button type="submit" onClick={() => calculate()}>
+          Calculate
+        </Button>
       </HStack>
-      {num1 !== null &&
-        num2 !== null &&
-        result !== null &&
+      {result !== null &&
         (result === "You cannot do division with zero" ? (
           <Alert status="error" variant="subtle">
             <AlertIcon />
