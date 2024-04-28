@@ -15,8 +15,12 @@ export const multiply = (num1: number, num2: number): number => {
     sign = -1
   }
 
-  const strNum1 = `${toPositive(int1)}${dec1}`
-  const strNum2 = `${toPositive(int2)}${dec2}`
+  const strNum1 = `${toPositive(int1) === 0 ? "" : int1}${
+    dec1 === 0 ? "" : dec1
+  }`
+  const strNum2 = `${toPositive(int2) === 0 ? "" : int2}${
+    dec2 === 0 ? "" : dec2
+  }`
 
   const decimalPlaces = add(
     dec1 === 0 ? 0 : dec1.toString().length,
