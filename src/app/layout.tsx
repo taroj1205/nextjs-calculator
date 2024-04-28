@@ -20,7 +20,11 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body>
-        <ColorModeScript type="cookie" nonce="testing" />
+        <ColorModeScript
+          initialColorMode="dark"
+          type="cookie"
+          nonce="testing"
+        />
         <Providers>
           <VStack overflowX="hidden" minH="100svh">
             <Box as="main" p="6" pt={{ base: "6", md: "3" }}>
